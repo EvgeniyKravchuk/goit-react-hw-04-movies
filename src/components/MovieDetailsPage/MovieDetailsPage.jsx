@@ -1,13 +1,15 @@
 import PropTypes from "prop-types";
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { useParams } from "react-router";
 import { Link, Route } from "react-router-dom";
 import { Wrapper } from "../../General/General.styled";
 import { Title, Button, Image } from "./MovieDetailsPage.styled";
 import { fetchMovieDetailsById } from "../../General/fetchOptions";
 import defaultImage from "../../images/imageNotFound.jpg";
-import Cast from "./Cast";
-import Reviews from "./Reviews";
+const Reviews = lazy(() =>
+  import("./Reviews" /* webpackChunkName: "Reviews" */)
+);
+const Cast = lazy(() => import("./Cast" /* webpackChunkName: "Cast" */));
 
 export default function MovieDetailsPage({ movies }) {
   const [movie, setMovie] = useState({});
@@ -51,12 +53,14 @@ export default function MovieDetailsPage({ movies }) {
         <Button>Отзывы</Button>
       </Link>
 
-      <Route path="/movies/:movieId/cast">
-        <Cast />
-      </Route>
-      <Route path="/movies/:movieId/reviews">
-        <Reviews />
-      </Route>
+      <Suspense fallback={<div>...Загружаем</div>}>
+        <Route path="/movies/:movieId/cast">
+          <Cast />
+        </Route>
+        <Route path="/movies/:movieId/reviews">
+          <Reviews />
+        </Route>
+      </Suspense>
     </Wrapper>
   );
 }
