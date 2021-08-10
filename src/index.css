@@ -1,0 +1,15 @@
+@import-normalize;
+@import "./General/Normilize.css";
+
+.link {
+  color: black;
+  text-decoration: none;
+
+  text-align: center;
+
+  cursor: pointer;
+}
+
+.active {
+  color: orangered;
+}
