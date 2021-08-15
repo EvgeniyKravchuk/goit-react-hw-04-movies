@@ -4,18 +4,19 @@ import { fetchMostPopularMovies } from "../../General/fetchOptions.js";
 import { Wrapper } from "../../General/General.styled.jsx";
 import FilmList from "./FilmList.jsx";
 
-export default function HomePage({ movies, setMovies }) {
+export default function HomePage({ history, response, setResponse }) {
+  console.log(history);
   useEffect(() => {
     fetchMostPopularMovies().then((response) => {
       const { results } = response.data;
 
-      setMovies([...results]);
+      setResponse([...results]);
     });
-  }, [setMovies]);
+  }, [setResponse]);
 
   return (
     <Wrapper>
-      <FilmList movies={movies} />
+      <FilmList movies={response} history={history} />
     </Wrapper>
   );
 }

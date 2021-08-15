@@ -5,14 +5,14 @@ import FilmList from "../HomePage/FilmList.jsx";
 import { Input } from "./MoviesPage.styled.jsx";
 import { fetchMoviesByName } from "../../General/fetchOptions.js";
 
-export default function MoviesPage({ movies, setMovies }) {
+export default function MoviesPage({ response, setResponse, history }) {
   const [search, setSearch] = useState(null);
 
   useEffect(() => {
     fetchMoviesByName(search).then((response) => {
-      setMovies([...response.data.results]);
+      setResponse([...response.data.results]);
     });
-  }, [search, setMovies]);
+  }, [search, setResponse]);
 
   const onSubmit = (evt) => {
     const value = evt.target[0].value;
@@ -29,12 +29,12 @@ export default function MoviesPage({ movies, setMovies }) {
       <form name="search" onSubmit={onSubmit}>
         <Input name="search" placeholder="Введите ключевое слово" />
       </form>
-      {search && <FilmList movies={movies} />}
+      {search && <FilmList movies={response} history={history} />}
     </Wrapper>
   );
 }
 
 MoviesPage.propTypes = {
-  movies: PropTypes.arrayOf(PropTypes.object),
-  setMovies: PropTypes.func,
+  response: PropTypes.arrayOf(PropTypes.object),
+  setResponse: PropTypes.func,
 };

@@ -1,5 +1,5 @@
 import { useState, lazy, Suspense } from "react";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
 import Header from "./General/Header";
 import HomePage from "./components/HomePage/HomePage";
 const MoviesPage = lazy(() =>
@@ -15,26 +15,33 @@ const MovieDetailsPage = lazy(() =>
 
 function App() {
   const [response, setResponse] = useState([]);
+  const ExtraProps = { response, setResponse };
 
   return (
     <>
       <Header />
-      <Switch>
-        <Route path="/" exact>
-          <HomePage movies={response} setMovies={setResponse} />
-        </Route>
-        <Suspense fallback={<div>...Загружаем</div>}>
-          <Route path="/movies" exact>
-            <MoviesPage movies={response} setMovies={setResponse} />
-          </Route>
+      <Suspense fallback={<div>...Загружаем</div>}>
+        <Switch>
+          <Route
+            exact
+            path="/"
+            render={(props) => <HomePage {...props} {...ExtraProps} />}
+          />
+          <Route
+            exact
+            path="/movies"
+            render={(props) => <MoviesPage {...props} {...ExtraProps} />}
+          />
+          <Route
+            path="/movies/:movieId"
+            render={(props) => <MovieDetailsPage {...props} {...ExtraProps} />}
+          />
           <Route path="/movies/:movieId">
             <MovieDetailsPage movies={response} setMovies={setResponse} />
           </Route>
-        </Suspense>
-        {/* <Route>
-          <HomePage movies={response} setMovies={setResponse} />
-        </Route> */}
-      </Switch>
+          <Redirect to="/" />
+        </Switch>
+      </Suspense>
     </>
   );
 }

@@ -11,9 +11,18 @@ const Reviews = lazy(() =>
 );
 const Cast = lazy(() => import("./Cast" /* webpackChunkName: "Cast" */));
 
-export default function MovieDetailsPage({ movies }) {
+export default function MovieDetailsPage({ history }) {
   const [movie, setMovie] = useState({});
   const { movieId } = useParams();
+
+  console.log(history.location);
+  const handleGoBack = () => {
+    if (history.location.state) {
+      history.goBack();
+    } else {
+      history.push("/");
+    }
+  };
 
   useEffect(() => {
     fetchMovieDetailsById(movieId).then(({ data }) => {
@@ -37,6 +46,14 @@ export default function MovieDetailsPage({ movies }) {
 
   return (
     <Wrapper>
+      <Button
+        onClick={() => {
+          handleGoBack();
+        }}
+      >
+        Назад
+      </Button>
+
       <Title>
         {original_title} {original_name}
       </Title>
@@ -54,7 +71,7 @@ export default function MovieDetailsPage({ movies }) {
       </Link>
 
       <Suspense fallback={<div>...Загружаем</div>}>
-        <Route path="/movies/:movieId/cast">
+        <Route path="/movies/:movieId/cast" exact>
           <Cast />
         </Route>
         <Route path="/movies/:movieId/reviews">

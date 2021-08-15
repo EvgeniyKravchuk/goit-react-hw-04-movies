@@ -3,7 +3,9 @@ import { Link } from "react-router-dom";
 import { List, Item } from "./HomePage.styled.jsx";
 import defaultImage from "../../images/imageNotFound.jpg";
 
-export default function FilmList({ movies }) {
+export default function FilmList({ movies, history }) {
+  console.log(history);
+
   return (
     <List>
       {movies.map(({ id, backdrop_path, original_title, original_name }) => {
@@ -13,7 +15,13 @@ export default function FilmList({ movies }) {
 
         return (
           <Item key={id}>
-            <Link className="link " to={`/movies/${id}`}>
+            <Link
+              className="link "
+              to={{
+                pathname: `/movies/${id}`,
+                state: { params: history.location?.search },
+              }}
+            >
               <img
                 src={backdrop_path ? imgUrl : defaultImg}
                 alt={original_title}
